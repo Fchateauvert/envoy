@@ -1,6 +1,8 @@
 #!/bin/bash
 
 set -e
+set -x
+export _recursion=true
 
 # BoringSSL build as described in the Security Policy for BoringCrypto module (2020-07-02):
 # https://csrc.nist.gov/CSRC/media/projects/cryptographic-module-validation-program/documents/security-policies/140sp3678.pdf
@@ -34,9 +36,8 @@ VERSION=7.0.1
 
 yum install -y centos-release-scl-rh
 yum install -y llvm-toolset-7.0-clang
-set +e
 source scl_source enable devtoolset-8 llvm-toolset-7.0
-set -e
+
 export HOME="$$PWD"
 printf "set(CMAKE_C_COMPILER \"clang\")\nset(CMAKE_CXX_COMPILER \"clang++\")\n" > $${HOME}/toolchain
 # export PATH="$$PWD/clang+llvm-$$VERSION-$$PLATFORM/bin:$$PATH"
