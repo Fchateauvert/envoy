@@ -37,8 +37,11 @@ VERSION=7.0.1
 yum install -q -y centos-release-scl-rh
 yum install -q -y llvm-toolset-7.0-clang
 set +eu
+echo `clang --version`
 source scl_source enable devtoolset-8 llvm-toolset-7.0
+echo `clang --version`
 set -eu
+echo `clang --version`
 
 export HOME="$$PWD"
 printf "set(CMAKE_C_COMPILER \"clang\")\nset(CMAKE_CXX_COMPILER \"clang++\")\n" > $${HOME}/toolchain
