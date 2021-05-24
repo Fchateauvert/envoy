@@ -38,7 +38,7 @@ yum install -q -y centos-release-scl-rh
 yum install -q -y llvm-toolset-7.0-clang
 set +eu
 source /opt/rh/devtoolset-8/enable
-source /opt/rh/
+source /opt/rh/llvm-toolset-7.0/enable
 set -eu
 echo `clang --version`
 echo $$PATH
