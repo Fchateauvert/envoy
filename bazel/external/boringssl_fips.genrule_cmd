@@ -37,9 +37,7 @@ VERSION=7.0.1
 yum install -q -y centos-release-scl-rh
 yum install -q -y llvm-toolset-7.0-clang
 set +eu
-echo `clang --version`
-source scl_source enable devtoolset-8 llvm-toolset-7.0
-echo `clang --version`
+source /opt/rh/devtoolset-8/enable
 set -eu
 echo `clang --version`
 
