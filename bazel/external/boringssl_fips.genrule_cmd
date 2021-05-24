@@ -45,7 +45,8 @@ echo `clang --version`
 
 export HOME="$$PWD"
 printf "set(CMAKE_C_COMPILER \"clang\")\nset(CMAKE_CXX_COMPILER \"clang++\")\n" > $${HOME}/toolchain
-# export PATH="$$PWD/clang+llvm-$$VERSION-$$PLATFORM/bin:$$PATH"
+export PATH="/opt/rh/llvm-toolset-7.0/root/usr/bin:$$PATH"
+echo `clang --version`
 
 if [[ `clang --version | head -1 | awk '{print $$3}'` != "$$VERSION" ]]; then
   echo "ERROR: Clang version doesn't match."
