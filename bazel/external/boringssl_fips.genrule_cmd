@@ -34,11 +34,11 @@ VERSION=7.0.1
 #   && echo "$$SHA256" clang+llvm-"$$VERSION"-"$$PLATFORM".tar.xz | sha256sum --check
 # tar xf clang+llvm-"$$VERSION"-"$$PLATFORM".tar.xz
 
-yum install -y centos-release-scl-rh
-yum install -y llvm-toolset-7.0-clang
-set +u
+yum install -q -y centos-release-scl-rh
+yum install -q -y llvm-toolset-7.0-clang
+set +eu
 source scl_source enable devtoolset-8 llvm-toolset-7.0
-set -u
+set -eu
 
 export HOME="$$PWD"
 printf "set(CMAKE_C_COMPILER \"clang\")\nset(CMAKE_CXX_COMPILER \"clang++\")\n" > $${HOME}/toolchain
