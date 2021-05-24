@@ -38,12 +38,13 @@ yum install -q -y centos-release-scl-rh
 yum install -q -y llvm-toolset-7.0-clang
 set +eu
 source /opt/rh/devtoolset-8/enable
+source /opt/rh/
 set -eu
 echo `clang --version`
-
+echo $$PATH
 export HOME="$$PWD"
 printf "set(CMAKE_C_COMPILER \"clang\")\nset(CMAKE_CXX_COMPILER \"clang++\")\n" > $${HOME}/toolchain
-export PATH="/opt/rh/llvm-toolset-7.0/root/usr/bin:$$PATH"
+# export PATH="/opt/rh/llvm-toolset-7.0/root/usr/bin:$$PATH"
 echo `clang --version`
 
 if [[ `clang --version | head -1 | awk '{print $$3}'` != "$$VERSION" ]]; then
