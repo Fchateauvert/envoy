@@ -75,11 +75,17 @@ VERSION=1.9.0
 SHA256=1b1235f2b0b4df55ac6d80bbe681ea3639c9d2c505c7ff2159a3daf63d196305
 PLATFORM="linux"
 
-curl -sLO https://github.com/ninja-build/ninja/releases/download/v"$$VERSION"/ninja-"$$PLATFORM".zip \
-  && echo "$$SHA256" ninja-"$$PLATFORM".zip | sha256sum --check
-unzip -o ninja-"$$PLATFORM".zip
+# curl -sLO https://github.com/ninja-build/ninja/releases/download/v"$$VERSION"/ninja-"$$PLATFORM".zip \
+#   && echo "$$SHA256" ninja-"$$PLATFORM".zip | sha256sum --check
+# unzip -o ninja-"$$PLATFORM".zip
+
+curl -sLO https://github.com/ninja-build/ninja/archive/refs/tags/v"$$VERSION".tar.gz
+tar xvf v"$$VERSION".tar.gz
+cd ninja-"$$VERSION"
+./configure.py --bootstrap
 
 export PATH="$$PWD:$$PATH"
+cd ..
 
 if [[ `ninja --version` != "$$VERSION" ]]; then
   echo "ERROR: Ninja version doesn't match."
