@@ -1,6 +1,8 @@
 #!/bin/bash
 
 set -e
+set -x
+export _recursion=true
 
 # BoringSSL build as described in the Security Policy for BoringCrypto module (2020-07-02):
 # https://csrc.nist.gov/CSRC/media/projects/cryptographic-module-validation-program/documents/security-policies/140sp3678.pdf
@@ -25,16 +27,25 @@ export PATH="$$(dirname `which cmake`):/usr/bin:/bin"
 
 # Clang 7.0.1
 VERSION=7.0.1
-SHA256=02ad925add5b2b934d64c3dd5cbd1b2002258059f7d962993ba7f16524c3089c
-PLATFORM="x86_64-linux-gnu-ubuntu-16.04"
+# SHA256=02ad925add5b2b934d64c3dd5cbd1b2002258059f7d962993ba7f16524c3089c
+# PLATFORM="x86_64-linux-gnu-ubuntu-16.04"
 
-curl -sLO https://releases.llvm.org/"$$VERSION"/clang+llvm-"$$VERSION"-"$$PLATFORM".tar.xz \
-  && echo "$$SHA256" clang+llvm-"$$VERSION"-"$$PLATFORM".tar.xz | sha256sum --check
-tar xf clang+llvm-"$$VERSION"-"$$PLATFORM".tar.xz
+# curl -sLO https://releases.llvm.org/"$$VERSION"/clang+llvm-"$$VERSION"-"$$PLATFORM".tar.xz \
+#   && echo "$$SHA256" clang+llvm-"$$VERSION"-"$$PLATFORM".tar.xz | sha256sum --check
+# tar xf clang+llvm-"$$VERSION"-"$$PLATFORM".tar.xz
 
+yum install -q -y centos-release-scl-rh
+yum install -q -y llvm-toolset-7.0-clang
+set +eu
+source /opt/rh/devtoolset-8/enable
+source /opt/rh/llvm-toolset-7.0/enable
+set -eu
+echo `clang --version`
+echo $$PATH
 export HOME="$$PWD"
 printf "set(CMAKE_C_COMPILER \"clang\")\nset(CMAKE_CXX_COMPILER \"clang++\")\n" > $${HOME}/toolchain
-export PATH="$$PWD/clang+llvm-$$VERSION-$$PLATFORM/bin:$$PATH"
+# export PATH="/opt/rh/llvm-toolset-7.0/root/usr/bin:$$PATH"
+echo `clang --version`
 
 if [[ `clang --version | head -1 | awk '{print $$3}'` != "$$VERSION" ]]; then
   echo "ERROR: Clang version doesn't match."
@@ -64,11 +75,17 @@ VERSION=1.9.0
 SHA256=1b1235f2b0b4df55ac6d80bbe681ea3639c9d2c505c7ff2159a3daf63d196305
 PLATFORM="linux"
 
-curl -sLO https://github.com/ninja-build/ninja/releases/download/v"$$VERSION"/ninja-"$$PLATFORM".zip \
-  && echo "$$SHA256" ninja-"$$PLATFORM".zip | sha256sum --check
-unzip -o ninja-"$$PLATFORM".zip
+# curl -sLO https://github.com/ninja-build/ninja/releases/download/v"$$VERSION"/ninja-"$$PLATFORM".zip \
+#   && echo "$$SHA256" ninja-"$$PLATFORM".zip | sha256sum --check
+# unzip -o ninja-"$$PLATFORM".zip
+
+curl -sLO https://github.com/ninja-build/ninja/archive/refs/tags/v"$$VERSION".tar.gz
+tar xvf v"$$VERSION".tar.gz
+cd ninja-"$$VERSION"
+./configure.py --bootstrap
 
 export PATH="$$PWD:$$PATH"
+cd ..
 
 if [[ `ninja --version` != "$$VERSION" ]]; then
   echo "ERROR: Ninja version doesn't match."
